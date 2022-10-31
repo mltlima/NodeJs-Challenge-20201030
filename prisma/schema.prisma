@@ -37,8 +37,20 @@ model Product {
   image_url        String
 }
 
+model Server {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  status      ServerStatus
+  failedFiles String[]
+  createdAt   DateTime     @default(now())
+}
+
 enum ProducStatus {
   DRAFT
   PUBLISHED
   TRASH
+}
+
+enum ServerStatus {
+  OK
+  FAILED
 }

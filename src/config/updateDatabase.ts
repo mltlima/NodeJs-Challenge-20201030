@@ -7,6 +7,8 @@ const readline = require('readline');
 const CronJob = require('cron').CronJob;
 
 import productsRepository from '@/repositories/productsRepository';
+import serverRepository from '@/repositories/serverRepository';
+import { ServerStatus } from '@prisma/client';
 
 const fileNames = [
     "products_01.json.gz",
@@ -21,40 +23,56 @@ const fileNames = [
 
 type FileNames = typeof fileNames[number];
 
-async function getData(filename: FileNames) {
+async function getData(filename: FileNames): Promise<Boolean> {
     let counter = 0;
 
-    const { data } = await axios.get(`${process.env.FILES_URL}${filename}`, {
-        headers: {"accept-encoding": "gzip"},
-        responseType: 'stream',
-    });
-
-    const transform = new Transform({
-        transform(chunk, encoding, next) {
-            next(null, chunk);
-        },
-    });
-
-    
-    (async () => {
-        const readStream = data.pipe(zlib.createGunzip()).pipe(transform);
-        const rl = readline.createInterface({
-            input: readStream,
-            crlfDelay: Infinity
+    try{
+        const { data } = await axios.get(`${process.env.FILES_URL}${filename}`, {
+            headers: {"accept-encoding": "gzip"},
+            responseType: 'stream',
         });
-        for await (const line of rl) {
-            const json = JSON.parse(line);
-            await productsRepository.insertProduct(json);
-            counter++;
-            if (counter === 100) break;
-        }
-    })();
+
+        const transform = new Transform({
+            transform(chunk, encoding, next) {
+                next(null, chunk);
+            },
+        });
+
+        
+        (async () => {
+            const readStream = data.pipe(zlib.createGunzip()).pipe(transform);
+            const rl = readline.createInterface({
+                input: readStream,
+                crlfDelay: Infinity
+            });
+            for await (const line of rl) {
+                const json = JSON.parse(line);
+                await productsRepository.insertProduct(json);
+                counter++;
+                if (counter === 100) break;
+            }
+        })();
+        return true;
+
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+
 }
 
 function scraping() {
+    const failedFiles: FileNames[] = [];
+
+    console.log("Scraping...");
+    
     fileNames.forEach(async (filename) => {
-        await getData(filename);
+        const fileStatus = await getData(filename);
+        if (!fileStatus) failedFiles.push(filename);
     });
+
+    //send status of scraping to database
+    serverRepository.update(failedFiles.length > 1 ? ServerStatus.FAILED : ServerStatus.OK, failedFiles);
 }
 
 

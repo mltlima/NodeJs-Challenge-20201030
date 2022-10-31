@@ -4,6 +4,7 @@ import express, { Express } from 'express';
 import cors from 'cors';
 
 import { loadEnv, connectDb, disconnectDB, main } from '@/config';
+import { handleApplicationErrors } from '@/middlewares';
 
 loadEnv();
 main();
@@ -13,6 +14,7 @@ app
   .use(cors())
   .use(express.json())
   .get('/', (_req, res) => res.send('OK!'))
+  .use(handleApplicationErrors);
 
 export async function init(): Promise<Express> {
   connectDb();
