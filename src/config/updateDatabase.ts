@@ -2,6 +2,7 @@ import fs from 'fs';
 import { ungzip } from 'node-gzip';
 import zlib, { gzip } from 'zlib';
 import axios from 'axios';
+import { Transform } from 'stream';
 const readline = require('readline');
 const CronJob = require('cron').CronJob;
 
@@ -24,16 +25,21 @@ async function getData(filename: FileNames) {
     let counter = 0;
 
     const { data } = await axios.get(`${process.env.FILES_URL}${filename}`, {
-        responseType: 'arraybuffer',
+        headers: {"accept-encoding": "gzip"},
+        responseType: 'stream',
     });
 
-    const unzipped = await ungzip(data);
-    fs.writeFileSync(`./${filename.slice(0,-3)}`, unzipped);
+    const transform = new Transform({
+        transform(chunk, encoding, next) {
+            next(null, chunk);
+        },
+    });
 
+    
     (async () => {
-        const fileStream = fs.createReadStream(`./${filename.slice(0,-3)}`);
+        const readStream = data.pipe(zlib.createGunzip()).pipe(transform);
         const rl = readline.createInterface({
-            input: fileStream,
+            input: readStream,
             crlfDelay: Infinity
         });
         for await (const line of rl) {
@@ -53,6 +59,6 @@ function scraping() {
 
 
 export async function main() {
-    console.log(process.uptime());
+    //getData("products_01.json.gz");
     const job = new CronJob('0 0 0 * * *', scraping, null, true, 'America/Sao_Paulo');
 }
