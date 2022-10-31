@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id               String       @id @default(auto()) @map("_id") @db.ObjectId
+  code             String       @unique
+  status           ProducStatus @default(PUBLISHED)
+  imported_t       DateTime     @default(now())
+  url              String
+  creator          String
+  created_t        String
+  last_modified_t  String
+  product_name     String
+  quantity         String
+  brands           String
+  categories       String
+  labels           String
+  cities           String
+  purchase_places  String
+  stores           String
+  ingredients_text String
+  traces           String
+  serving_size     String
+  serving_quantity String
+  nutriscore_score String
+  nutriscore_grade String
+  main_category    String
+  image_url        String
+}
+
+enum ProducStatus {
+  DRAFT
+  PUBLISHED
+  TRASH
+}

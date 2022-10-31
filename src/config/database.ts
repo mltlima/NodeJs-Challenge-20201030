@@ -1,19 +1,10 @@
-import { MongoClient } from 'mongodb';
-import dotenv from 'dotenv';
+import { PrismaClient } from '@prisma/client';
 
-dotenv.config();
-
-let db = null;
-const mongoClient = new MongoClient(process.env.MONGO_URI);
-
+export let prisma: PrismaClient;
 export function connectDb(): void {
-    mongoClient.connect();
-    db = mongoClient.db("fitness_foods");
-    console.log("Connected to MongoDB");
+  prisma = new PrismaClient();
 }
 
 export async function disconnectDB(): Promise<void> {
-    await mongoClient.close();
+  await prisma?.$disconnect();
 }
-
-export default db;
