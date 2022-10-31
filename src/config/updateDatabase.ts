@@ -53,5 +53,6 @@ function scraping() {
 
 
 export async function main() {
+    console.log(process.uptime());
     const job = new CronJob('0 0 0 * * *', scraping, null, true, 'America/Sao_Paulo');
 }
