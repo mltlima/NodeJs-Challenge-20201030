@@ -72,11 +72,14 @@ function scraping() {
     });
 
     //send status of scraping to database
-    serverRepository.update(failedFiles.length > 1 ? ServerStatus.FAILED : ServerStatus.OK, failedFiles);
+    serverRepository.createServerStatus(failedFiles.length > 1 ? ServerStatus.FAILED : ServerStatus.OK, failedFiles);
+    console.log("Scraping finished");
 }
 
 
 export async function main() {
     //getData("products_01.json.gz");
+    //scraping();
+    //serverRepository.createServerStatus(ServerStatus.OK, []);
     const job = new CronJob('0 0 0 * * *', scraping, null, true, 'America/Sao_Paulo');
 }

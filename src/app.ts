@@ -3,17 +3,17 @@ import 'express-async-errors';
 import express, { Express } from 'express';
 import cors from 'cors';
 
-import { loadEnv, connectDb, disconnectDB, main } from '@/config';
+import { loadEnv, connectDb, disconnectDB } from '@/config';
 import { handleApplicationErrors } from '@/middlewares';
+import { statusRouter } from '@/routers';
 
 loadEnv();
-main();
 
 const app = express();
 app
   .use(cors())
   .use(express.json())
-  .get('/', (_req, res) => res.send('OK!'))
+  .get('/', statusRouter)
   .use(handleApplicationErrors);
 
 export async function init(): Promise<Express> {

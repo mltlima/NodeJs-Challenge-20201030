@@ -11,7 +11,19 @@ async function getLastUpdate() {
   return lastUpdate;
 }
 
-async function update(status: ServerStatus, failedFiles: Array<string>) {
+async function update(id: string, status: ServerStatus, failedFiles: Array<string>) {
+  await prisma.server.update({
+    where: {
+      id,
+    },
+    data: {
+      status: status,
+      failedFiles: failedFiles,
+    },
+});
+}
+
+async function createServerStatus(status: ServerStatus, failedFiles: Array<string>) {
   await prisma.server.create({
     data: {
       status,
@@ -23,6 +35,7 @@ async function update(status: ServerStatus, failedFiles: Array<string>) {
 const serverRepository = {
   getLastUpdate,
   update,
+  createServerStatus,
 };
 
 export default serverRepository;
