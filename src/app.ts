@@ -5,7 +5,7 @@ import cors from 'cors';
 
 import { loadEnv, connectDb, disconnectDB } from '@/config';
 import { handleApplicationErrors } from '@/middlewares';
-import { statusRouter } from '@/routers';
+import { statusRouter, productsRouter } from '@/routers';
 
 loadEnv();
 
@@ -14,6 +14,7 @@ app
   .use(cors())
   .use(express.json())
   .get('/', statusRouter)
+  .use('/products', productsRouter)
   .use(handleApplicationErrors);
 
 export async function init(): Promise<Express> {

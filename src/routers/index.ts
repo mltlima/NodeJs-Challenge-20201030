@@ -1,1 +1,2 @@
-export * from './statusRouter';
+export * from './serverRouter';
+export * from './productsRouter';

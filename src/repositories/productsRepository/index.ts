@@ -70,8 +70,11 @@ async function getProduct(code: string): Promise<Product | null> {
   return product;
 }
 
-async function getProducts(): Promise<Product[]> {
-  const products = await prisma.product.findMany();
+async function getProducts(page: number): Promise<Product[]> {
+  const products = await prisma.product.findMany({
+    skip: (page - 1) * 20,
+    take: 20,
+  });
   return products;
 }
 
