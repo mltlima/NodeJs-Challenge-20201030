@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "ttsc -p tsconfig.build.json",
     "test": "jest",
     "test:unit": "cross-env NODE_ENV=test jest -i",
     "dev": "cross-env NODE_ENV=development nodemon --watch 'src/' --exec 'ts-node -r tsconfig-paths/register ./src/server.ts' -e ts"
