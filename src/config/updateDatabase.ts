@@ -6,7 +6,7 @@ import { Transform } from 'stream';
 const readline = require('readline');
 const CronJob = require('cron').CronJob;
 
-import productsRepository from '@/repositories/productsRepository';
+import { productsRepository } from '@/repositories/productsRepository';
 import serverRepository from '@/repositories/serverRepository';
 import { ServerStatus } from '@prisma/client';
 

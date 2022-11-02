@@ -72,6 +72,9 @@ async function getProduct(code: string): Promise<Product | null> {
 
 async function getProducts(page: number): Promise<Product[]> {
   const products = await prisma.product.findMany({
+    orderBy: {
+      created_t: 'desc',
+    },
     skip: (page - 1) * 20,
     take: 20,
   });
@@ -91,12 +94,10 @@ async function deleteProduct(code: string) {
 
 export type ProductParams = Omit<Product, 'id' | 'imported_t'>;
 
-const productsRepository = {
+export const productsRepository = {
     insertProduct,
     updateProduct,
     getProduct,
     getProducts,
     deleteProduct,
 };
-
-export default productsRepository;

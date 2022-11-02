@@ -1,5 +1,5 @@
 import { conflictError, notFoundError } from '@/errors';
-import productsRepository from '@/repositories/productsRepository';
+import { productsRepository } from '@/repositories/productsRepository';
 import { ProductParams } from '@/repositories/productsRepository';
 
 
