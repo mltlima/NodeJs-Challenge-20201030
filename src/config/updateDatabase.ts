@@ -1,6 +1,4 @@
-import fs from 'fs';
-import { ungzip } from 'node-gzip';
-import zlib, { gzip } from 'zlib';
+import zlib from 'zlib';
 import axios from 'axios';
 import { Transform } from 'stream';
 const readline = require('readline');
@@ -78,8 +76,5 @@ function scraping() {
 
 
 export async function main() {
-    //getData("products_01.json.gz");
-    //scraping();
-    //serverRepository.createServerStatus(ServerStatus.OK, []);
     const job = new CronJob('0 0 0 * * *', scraping, null, true, 'America/Sao_Paulo');
 }
