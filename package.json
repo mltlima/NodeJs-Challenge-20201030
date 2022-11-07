@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "prebuild": "rm -rf dist",
     "build": "tsc -p tsconfig.build.json",
     "test": "jest",
     "start": "node dist/server.js",
@@ -40,9 +41,25 @@
     "got": "^12.5.2",
     "http-status": "^1.5.3",
     "joi": "^17.7.0",
+    "module-alias": "^2.2.2",
     "mongodb": "^4.11.0",
     "node-gzip": "^1.1.2",
     "reflect-metadata": "^0.1.13",
+    "typescript-transform-paths": "^3.4.4",
     "zlib": "^1.0.5"
+  },
+  "_moduleAliases": {
+    "@/app": "./dist/app.js",
+    "@/config": "./dist/config",
+    "@/controllers": "./dist/controllers",
+    "@/database": "./dist/database",
+    "@/errors": "./dist/errors",
+    "@/middlewares": "./dist/middlewares",
+    "@/models": "./dist/models",
+    "@/repositories": "./dist/repositories",
+    "@/routers": "./dist/routers",
+    "@/services": "./dist/services",
+    "@/utils": "./dist/utils",
+    "@/schemas": "./dist/schemas"
   }
 }
